@@ -1,5 +1,4 @@
 # "org" ensures this Service is used with the correct Serverless Framework Access Key.
-org: selflearning12
 # "app" enables Serverless Framework Dashboard features and sharing them with other Services.
 app: ecommerce
 # "service" is the name of this project. This will also be added to your AWS resource names.
@@ -8,6 +7,23 @@ service: user-service
 provider:
   name: aws
   runtime: nodejs20.x
+  versionFunctions: false
+  stage: "dev"
+  region: "ap-south-1"
+  timeout: 20
+  httpApi:
+    cors: true
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - "dynamodb:PutItem"
+            - "dynamodb:GettItem"
+            - "dynamodb:DeleteItem"
+            - "dynamodb:Scan"
+          Resource:
+            - { "Fn::GetAtt": ["UserTable", "Arn"] }
 
 functions:
   signup:
@@ -68,3 +84,19 @@ functions:
 plugins:
   - serverless-offline
   - serverless-plugin-typescript
+
+resources:
+  Resources:
+    UserTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: UserTable
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        AttributeDefinitions:
+          - AttributeName: userId,
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId,
+            KeyType: HASH

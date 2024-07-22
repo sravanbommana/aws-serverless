@@ -1,24 +1,46 @@
-import { SuccessResponse } from "../utility/response";
+import { plainToClass } from "class-transformer";
+import { UserRepository } from "../repository/userRepository";
+import { ErrorResponse, SuccessResponse } from "../utility/response";
 import { APIGatewayProxyEventV2 } from "aws-lambda";
+import { autoInjectable } from "tsyringe";
+import { SignUpModel } from "../models/dto/SignUpModel";
+import { AppValidationError } from "../utility/errors";
+import {
+  GetSalt,
+  GetHashedPassword,
+  validatePassword,
+} from "../utility/password";
 
+@autoInjectable()
 export class UserService {
-  constructor() {}
+  userRepository: UserRepository;
+  constructor(userRepository: UserRepository) {
+    this.userRepository = userRepository;
+  }
 
   //User Creation, Validation & Login
   async CreateUser(event: APIGatewayProxyEventV2) {
-    const body = event.body;
-    console.log(body);
-    // return {
-    //   statusCode: 200,
-    //   headers: {
-    //     "Access-Control-Allow-Origin": "*",
-    //   },
-    //   body: JSON.stringify({
-    //     message: "Response From Create User",
-    //     data: "",
-    //   }),
-    // };
-    return SuccessResponse({ message: "Response From Create User" });
+    try {
+      const input = plainToClass(SignUpModel, event.body);
+      const error = await AppValidationError(input);
+      if (error) {
+        return ErrorResponse(404, error);
+      }
+      const salt = await GetSalt();
+      const hashedPassword = await GetHashedPassword(input.password, salt);
+      console.log("calling repo");
+      const data = await this.userRepository.createUser({
+        email: input.email,
+        password: hashedPassword,
+        phone: input.phone,
+        userType: "BUYER",
+        salt,
+      });
+      return SuccessResponse(data);
+    } catch (error) {
+      console.log(error);
+      return ErrorResponse(500, error);
+    }
   }
 
   async UserLogin(event: APIGatewayProxyEventV2) {
