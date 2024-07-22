@@ -29,7 +29,7 @@ export class UserService {
       const salt = await GetSalt();
       const hashedPassword = await GetHashedPassword(input.password, salt);
       console.log("calling repo");
-      const data = await this.userRepository.createUser({
+      const data = await this.userRepository.createAccount({
         email: input.email,
         password: hashedPassword,
         phone: input.phone,
