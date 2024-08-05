@@ -17,6 +17,7 @@ export class ServicesStack extends Construct {
   public readonly userService: NodejsFunction;
   public readonly cartService: NodejsFunction;
   public readonly paymentService: NodejsFunction;
+  public readonly verificationService: NodejsFunction;
 
   constructor(scope: Construct, id: string, props: ServiceProps) {
     super(scope, id);
@@ -54,6 +55,11 @@ export class ServicesStack extends Construct {
 
     this.paymentService = new NodejsFunction(this, "paymentLambda", {
       entry: join(__dirname, "/../src/payment-api.ts"),
+      ...nodeJsFunctionProps,
+    });
+
+    this.verificationService = new NodejsFunction(this, "verificationLambda", {
+      entry: join(__dirname, "/../src/verification-api.ts"),
       ...nodeJsFunctionProps,
     });
   }

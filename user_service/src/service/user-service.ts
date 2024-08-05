@@ -73,6 +73,10 @@ export class UserService {
     }
   }
 
+  async GetVerificationToken(event: APIGatewayEvent) {
+    return SuccessResponse({ message: "Here is the verification token" });
+  }
+
   async VerifyUser(event: APIGatewayEvent) {
     return SuccessResponse({ message: "User Account Verified Succesfully" });
   }

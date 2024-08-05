@@ -9,6 +9,7 @@ interface ApiGateWayStackProps {
   userService: IFunction;
   cartService: IFunction;
   paymentService: IFunction;
+  verificationService: IFunction;
 }
 
 interface ResourceType {
@@ -30,6 +31,7 @@ export class ApiGateWayStack extends Construct {
       userService,
       cartService,
       paymentService,
+      verificationService,
     }: ApiGateWayStackProps
   ) {
     const apigw = new aws_apigateway.RestApi(this, `${serviceName}-ApiGtw`);
@@ -44,10 +46,6 @@ export class ApiGateWayStack extends Construct {
     this.createEndpoint(userService, apigw, {
       name: "user",
       method: ["GET", "POST", "PUT", "DELETE"],
-      // child: {
-      //   name: "{id}",
-      //   method: ["GET", "PUT", "DELETE"],
-      // },
     });
     this.createEndpoint(cartService, apigw, {
       name: "cart",
@@ -56,6 +54,10 @@ export class ApiGateWayStack extends Construct {
     this.createEndpoint(paymentService, apigw, {
       name: "payment",
       method: ["GET", "POST", "PUT"],
+    });
+    this.createEndpoint(verificationService, apigw, {
+      name: "verification",
+      method: ["GET", "POST"],
     });
   }
 

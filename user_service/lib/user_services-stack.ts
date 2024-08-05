@@ -13,6 +13,7 @@ export class UserServiceStack extends cdk.Stack {
       userService,
       cartService,
       paymentService,
+      verificationService,
     } = new ServicesStack(this, "UserService", {});
     new ApiGateWayStack(this, "UserApiGateWay", {
       loginService,
@@ -20,6 +21,7 @@ export class UserServiceStack extends cdk.Stack {
       userService,
       cartService,
       paymentService,
+      verificationService,
     });
   }
 }
