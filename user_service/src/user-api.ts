@@ -10,11 +10,11 @@ export const handler = async (
 ): Promise<APIGatewayProxyResult> => {
   switch (event.httpMethod.toLowerCase()) {
     case "post":
-      return service.CreateProfile();
+      return service.CreateProfile(event);
     case "get":
-      return service.GetProfile();
+      return service.GetProfile(event);
     case "put":
-      return service.EditProfile();
+      return service.EditProfile(event);
   }
   return ErrorResponse(404, "requested method not allowed");
 };
