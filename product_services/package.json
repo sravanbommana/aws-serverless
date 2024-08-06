@@ -8,7 +8,8 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "dev": "cdk synth && sam local start-api -t cdk.out/ProductServicesStack.template.json"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.141",
@@ -21,8 +22,13 @@
     "typescript": "^5.5.3"
   },
   "dependencies": {
+    "@middy/core": "^5.4.5",
+    "@middy/http-json-body-parser": "^5.4.5",
     "aws-cdk-lib": "2.147.2",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
     "constructs": "^10.0.0",
+    "mongoose": "^8.5.2",
     "source-map-support": "^0.5.21"
   }
 }
