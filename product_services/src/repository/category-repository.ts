@@ -1,54 +1,64 @@
-import { availableMemory } from "process";
-import { ProductInput } from "../dto/product-input";
-import { ProductDoc, products } from "../models/product-model";
+import { AddItemInput, CategoryInput } from "../dto/category-input";
+import { categories, categoryDoc } from "../models";
 
 export class CategoryRepository {
+  constructor() {}
+  async createCategory({ name, detail_image, title, subtitle }: CategoryInput) {
+    const newCategory = await categories.create({
+      name,
+      detail_image,
+      title,
+      products: [],
+      subtitle,
+    });
 
-    async createProduct({
-        name,
-        description,
-        price,
-        category_id,
-        image_url
-    }: ProductInput) {
-        return products.create({
-            name,
-            description,
-            price,
-            category_id,
-            image_url,
-            availability: true
-        })
-    }
+    return newCategory;
+  }
 
-    async getAllProducts(offset = 0, pages?: number) {
-        return products.find().skip(offset).limit(pages ? pages : 500);
-    }
+  async getAllCategories(offset = 0, perpage?: number) {
+    return categories
+      .find()
+      .skip(offset)
+      .limit(perpage ? perpage : 100);
+  }
 
-    async getProductById(id: string) {
-        return products.findById(id);
-    }
+  async getCategoryById(id: string) {
+    return categories.findById(id);
+  }
 
-    async editProduct({
-        id,
-        name,
-        description,
-        price,
-        category_id,
-        image_url,
-        availability
-    }: ProductInput) {
-        let existingProduct = await products.findById(id) as ProductDoc;
-        existingProduct.name = name;
-        existingProduct.description = description;
-        existingProduct.price = price;
-        existingProduct.category_id = category_id;
-        existingProduct.image_url = image_url;
-        existingProduct.availability = availability;
-        return existingProduct.save();
-    }
+  async editCategory({
+    id,
+    name,
+    detail_image,
+    title,
+    products,
+    subtitle,
+  }: CategoryInput) {
+    let existingCategory = (await categories.findById(id)) as categoryDoc;
+    existingCategory.name = name;
+    existingCategory.detail_image = detail_image;
+    existingCategory.title = title;
+    existingCategory.products = products;
+    existingCategory.subtitle = subtitle;
+    return existingCategory.save();
+  }
 
-    async deleteProduct(_id:string) {
-        return products.deleteOne({_id})
-    }
+  async deleteCategory(_id: string) {
+    return categories.deleteOne({ _id });
+  }
+
+  async addItem({ id, products }: AddItemInput) {
+    let category = (await categories.findById(id)) as categoryDoc;
+    category.products = [...category.products, ...products];
+    return category.save();
+  }
+
+  async removeItem({ id, products }: AddItemInput) {
+    let category = (await categories.findById(id)) as categoryDoc;
+    const excludeProducts = category.products.filter(
+      (item) => !products.includes(item)
+    );
+    category.products = excludeProducts;
+    return category.save();
+  }
 }

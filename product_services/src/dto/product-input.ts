@@ -8,7 +8,7 @@ export class ProductInput {
 
   description: string;
 
-  categories: number;
+  categories: string;
 
   image_url: string;
 

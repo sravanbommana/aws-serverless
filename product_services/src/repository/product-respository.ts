@@ -1,6 +1,6 @@
 import { availableMemory } from "process";
 import { ProductInput } from "../dto/product-input";
-import { ProductDoc, products } from "../models/product-model";
+import { ProductDoc, products } from "../models";
 
 export class ProductRepository {
   async createProduct({
@@ -56,6 +56,8 @@ export class ProductRepository {
   }
 
   async deleteProduct(_id: string) {
-    return products.deleteOne({ _id });
+    const { categories } = (await products.findById(_id)) as ProductDoc;
+    const deleteResult = products.deleteOne({ _id });
+    return { categories, deleteResult };
   }
 }

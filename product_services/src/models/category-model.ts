@@ -1,51 +1,41 @@
-import { timeStamp } from "console";
 import mongoose from "mongoose";
 
-type categoryModel = {
-    name: string
-    nameTranslations: string;
-    parentId: string;
-    subCategories: CategoryDoc[];
-    products: string[];
-    displayOrder: number; 
-}
-export type CategoryDoc = mongoose.Document & categoryModel;
+export type categoryModel = {
+  name: string;
+  detail_image: string;
+  title: string;
+  products: string[];
+  subtitle: string;
+};
+export type categoryDoc = mongoose.Document & categoryModel;
 
-const categorySchema = new mongoose.Schema({
+export const categorySchema = new mongoose.Schema(
+  {
     name: String,
-    nameTranslations: { en: { type: String }, de: { type: String }},
-    parentId: {
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: "categories"
-    },
-    subCategories: [
-        {
-            type: mongoose.SchemaTypes.ObjectId,
-            ref: "categories"
-        }
-    ],
+    detail_image: String,
+    title: String,
     products: [
-        {
-            type: mongoose.SchemaTypes.ObjectId,
-            ref: "products"
-        }
+      {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "products",
+      },
     ],
-    displayOrder: { type: Number, default: 1}
-
-},
-    {
-        toJSON: {
-            transform(doc, ret, options) {
-                delete ret.__v;
-                delete ret.createdAt;
-                delete ret.updatedAt;
-
-            }
-        },
-        timeStamps: true
+    subtitle: String,
+  },
+  {
+    toJSON: {
+      transform(doc, ret, options) {
+        delete ret.__v;
+        delete ret.createdAt;
+        delete ret.updatedAt;
+      },
     },
+    timeStamps: true,
+  }
 );
 
-const products = mongoose.models.products || mongoose.model<ProductDoc>("products", productSchema);
+const categories =
+  mongoose.models.categories ||
+  mongoose.model<categoryDoc>("categories", categorySchema);
 
-export { products }
+export { categories };
