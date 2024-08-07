@@ -12,6 +12,10 @@ export class ProductService {
     this._repository = repository;
   }
 
+  async ResponseWithError(event: APIGatewayEvent) {
+    return ErrorResponse(404, new Error("method not allowed"));
+  }
+
   async createProduct(event: APIGatewayEvent) {
     const input = plainToClass(ProductInput, JSON.parse(event.body!));
     const error = await AppValidationError(input);

@@ -4,7 +4,9 @@ const formatResponse = (statusCode: number, message: string, data: unknown) => {
       statusCode,
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT, DELETE",
       },
       body: JSON.stringify({
         message,
@@ -16,7 +18,9 @@ const formatResponse = (statusCode: number, message: string, data: unknown) => {
       statusCode,
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT, DELETE",
       },
       body: JSON.stringify({
         message,

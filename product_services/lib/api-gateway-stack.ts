@@ -24,7 +24,11 @@ export class ApiGateWayStack extends Construct {
     serviceName: string,
     { productService, categoryService, dealsService }: ApiGateWayStackProps
   ) {
-    const apigw = new aws_apigateway.RestApi(this, `${serviceName}-ApiGtw`);
+    const apigw = new aws_apigateway.RestApi(this, `${serviceName}-ApiGtw`, {
+      defaultCorsPreflightOptions: {
+        allowOrigins: aws_apigateway.Cors.ALL_ORIGINS,
+      },
+    });
     this.createEndpoint(productService, apigw, {
       name: "product",
       method: ["GET", "POST"],
