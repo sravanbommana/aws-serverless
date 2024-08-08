@@ -34,7 +34,11 @@ export class ApiGateWayStack extends Construct {
       verificationService,
     }: ApiGateWayStackProps
   ) {
-    const apigw = new aws_apigateway.RestApi(this, `${serviceName}-ApiGtw`);
+    const apigw = new aws_apigateway.RestApi(this, `${serviceName}-ApiGtw`, {
+      defaultCorsPreflightOptions: {
+        allowOrigins: aws_apigateway.Cors.ALL_ORIGINS,
+      },
+    });
     this.createEndpoint(loginService, apigw, {
       name: "login",
       method: ["POST"],

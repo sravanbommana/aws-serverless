@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema(
     password: String,
     phone: String,
     salt: String,
+    name: String,
   },
   {
     toJSON: {

@@ -5,5 +5,6 @@ export class SignUpInput extends LoginInput {
   @Length(10, 13)
   phone: string;
   salt?: string;
+  name?: string;
   user_id?: string;
 }
